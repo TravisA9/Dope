@@ -1,0 +1,61 @@
+*{border:0px; margin:0px;}
+  span{ margin:1px; background:#f9e79f; }
+
+  .filt, .vari{ padding:3px; margin:5px; border-radius:5px; display:inline-block;}
+  .filt{ width:110px; background:#f9e79f;}
+  .vari{ background:#e6b0aa;}
+  .vari > input{ width:130px; }
+
+  table {
+    width:100%;
+  }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 15px;
+    text-align: left;
+  }
+  table tr:nth-child(even) {
+    background-color: #eee;
+  }
+  table tr:nth-child(odd) {
+   background-color: #fff;
+  }
+  table th {
+    background-color: steelblue;
+    color: white;
+  }
+  .title{ background: #f1948a ; color:#78281f;
+      text-shadow: #f5b7b1 1px 1px 0;
+      }
+  .title div{ display:inline-block; }
+  .what li{padding:15px;}
+
+
+  .txt{ background:white; min-width:30px; min-height:20px; padding:5px;}
+  .node{border:thin solid #27ae60; border-radius: 9px; padding:0px;
+      margin:8px; background:#e5e8e8; overflow:hidden; display:inline-block;}
+
+
+  .var{ background:#e6b0aa; }
+  .and{ background:#82e0aa; }
+  .not{ background:#d7bde2; }
+  .or{ background:#f7dc6f; }
+
+  .var, .or, .and, .not{ padding-top:6px; padding-bottom:5px; margin:0px; height:14px;  width:30px;}
+  .and:hover, .not:hover, .or:hover, .var:hover{ width:220px; }
+  .var:focus, .and:focus, .not:focus, .or:focus{ width:220px; }
+  .node button{font-size:20px;}
+
+  ::-moz-selection { /* Code for Firefox */
+    color: white;
+    background:#ec7063;
+  }
+
+  ::selection {
+    color: white;
+    background:#ec7063;
+  }
+  .button{ padding:8px; color:white; font-size:18px;}
