@@ -14,59 +14,164 @@ window.onload = function(){
 
 }
 // =============================================================================
+function isVisible(node){     var test = true;
+
+    if('and' in node && node.and.length > 0){
+        var and
+        for (and of node.and) { //console.log(and, data.filters[and])
+            if(!data.filters[and]){ test = false; }
+        }
+    }
+    if('not' in node){
+        var not
+        for (not of node.not) {
+            if(data.filters[not]){ test = false; }
+        }
+    }
+    if(test && 'or' in node && node.or.length > 0){ test = false;
+        var or
+        for (or of node.or) {
+            if(data.filters[or]){ test = true; }
+        }
+    }
+    return test;
+}
+// =============================================================================
 function Generate(data){
     str = ""
     for(var i = 0; i < doc.length; i++){
-        var article = doc[i]
-        if('var' in article){
-            str += " <span class=\"var\">" + data.variables[article.var] + "</span>"
+        var node = doc[i]
+        if('var' in node){
+            str += " <span class=\"var\">" + data.variables[node.var] + "</span>"
         }else{
-            var test = true
 
-            if('and' in article && article.and.length > 0){
-                var and
-                for (and of article.and) { console.log(and, data.filters[and])
-                    if(!data.filters[and]){ test = false; }
-                }
-            }
-            if('not' in article){
-                var not
-                for (not of article.not) {
-                    if(data.filters[not]){ test = false; }
-                }
-            }
-            if('or' in article && article.or.length > 0){ test = false;
-                var or
-                for (or of article.or) {
-                    if(data.filters[or]){ test = true; }
-                }
-            }
-
-                if(test){ str += article.txt }
-
+                if(isVisible(node)){ str += node.txt }
         }
-
     }
     document.getElementById("inject").innerHTML = str;
-
 }
 
 // =============================================================================
+function Document() {
+document.getElementById("inject").style.display = "block"
+document.getElementById("schema").style.display = "none"
+}
+// =============================================================================
+function Schema(){
+    document.getElementById("inject").style.display = "none"
+    document.getElementById("schema").style.display = "block"
+}
+// =============================================================================
+function getvar(type, name){
+    if (type == "variables") {
+        data.variables[name] = document.getElementById(name).value
+    } else {
+        data.filters[name] = document.getElementById(name).checked;
+    }
+}
+// =============================================================================
 function getdata(event){
-    data = { filters:{ Toasted:true, Bacon:true, Tomatos:true, Onions:true, Jalapenos:true, Mustard:true, Relish:true, Catsup:true }, variables:{ Cheese:"Swiss", Greens:"Letuce", Beer:"Corona" }};
-    data.variables.Cheese = document.getElementById("Cheese").value
-    data.variables.Greens = document.getElementById("Greens").value
-    data.variables.Beer = document.getElementById("Beer").value
+    for (v in data.variables){ getvar("variables", v); }
+    for (v in data.filters){ getvar("filters", v); }
 
-    data.filters.Toasted = document.getElementById("Toasted").checked;
-    data.filters.Bacon = document.getElementById("Bacon").checked;
-    data.filters.Tomatos = document.getElementById("Tomatos").checked;
-    data.filters.Onions = document.getElementById("Onions").checked;
-    data.filters.Jalapenos = document.getElementById("Jalapenos").checked;
-    data.filters.Mustard = document.getElementById("Mustard").checked;
-    data.filters.Relish = document.getElementById("Relish").checked;
-    data.filters.Catsup = document.getElementById("Catsup").checked;
-    // alert(JSON.stringify(data))
     event.preventDefault()
     Generate(data)
+    GenerateSchema()
 }
+// =============================================================================
+// function is True(name){
+//     return data.variables[name]
+// }
+// =============================================================================
+function GenerateSchema(){
+    str = ""
+    for(var i = 0; i < doc.length; i++){
+        var node = doc[i]
+        var disp = ""
+        if(!isVisible(node)){ disp = "style=\"display:none;"; }
+        str += "<div class=\"node\" "+disp+"\"><button type=\"button\" onclick=\"Delete(event)\">x</button>"
+        if('and' in node){ // data.variables[name]   data.filters[name]
+            str += "<input class=\"and\" type=\"text\" value=\""+node.and+"\">"
+        }else{ str += "<input class=\"and\" type=\"text\" value=\"\" placeholder=\"  &\">"; }
+        if('not' in node){
+            str += "<input class=\"not\" type=\"text\" value=\""+node.not+"\">"
+        }else{ str += "<input class=\"not\" type=\"text\" value=\"\" placeholder=\"  !\">"; }
+        if('or' in node){
+            str += "<input class=\"or\" type=\"text\" value=\""+node.or+"\">"
+        }else{ str += "<input class=\"or\" type=\"text\" value=\"\" placeholder=\"  |\">"; }
+        if('var' in node){
+            str += "<input class=\"var\" type=\"text\" value=\""+node.var+"\">"
+        }else{str += "<input class=\"var\" type=\"text\" value=\"\" placeholder=\"  $\">"}
+
+        str += "<button type=\"button\" onclick=\"NewNode(event)\">+</button>"
+        if('txt' in node){ var text = node.txt
+            text = text.replace(/</g, '&lt;')
+            text = text.replace(/>/g, '&gt;')
+            str += "<div class=\"txt\" contenteditable>"+text+"</div>"
+        }else{ str += "<div class=\"txt\" contenteditable></div>"; }
+
+        str += " </div>"
+    }
+
+    document.getElementById("schema").innerHTML = str
+}
+// =============================================================================
+function insertAfter(node, newNode){
+    node.parentElement.parentNode.insertBefore(newNode, node.parentElement.nextSibling);
+}
+// =============================================================================
+function NewNode(event){
+    const newnode = document.createElement("div");
+    newnode.className = "node"
+    newnode.innerHTML = '<button type="button" onclick="Delete(event)">x</button><input class="and" type="text" value="" placeholder=\"  &\"><input class="not" type="text" value="" placeholder=\"  !\"><input class="or" type="text" value="" placeholder=\"  |\"><input class="var" type="text" value="" placeholder=\"  $\"><button type="button" onclick="NewNode(event)">+</button><div class="txt" contenteditable="">This is a new node!</div> '
+
+    insertAfter(event.target, newnode)
+}
+// =============================================================================
+function Delete(event){
+    event.target.parentElement.remove()
+}
+// =============================================================================
+function Commit(event){
+    var nodes = document.getElementsByClassName("node") // OR: x.childNodes;
+    var stack = []
+    for (var i = 0; i < nodes.length; i++) {
+        var children = nodes[i].childNodes
+        var and = children[1].value
+            and = (and.length > 0) ? and.split(',') : null
+        var not = children[2].value
+            not = (not.length > 0) ? not.split(',') : null
+        var or  = children[3].value
+            or = (or.length > 0) ? or.split(',') : null
+        var v = children[4].value
+            v = (v.length > 0) ? v : null
+        var text = children[6].innerHTML
+            text = (text.length > 0) ? text : null
+
+        var n = {}
+        if(and  != null){ n.and = and; }
+        if(not  != null){ n.not = not; }
+        if( or  != null){ n.or = or; }
+        if(  v  != null){ n.var = v; }
+        if(text != null){
+            text = text.replace(/&lt;/g, '<')
+            text = text.replace(/&gt;/g, '>')
+            text = text.replace(/"/g, '\"')
+            n.txt = text
+        }
+
+        stack.push(n)
+    }
+    doc = stack
+    console.log(doc)
+}
+// =============================================================================
+// <div class="node" "="">
+//     // <button type="button" onclick="Delete(event)">x</button>
+//     <input class="and" type="text" value="Bacon">
+//     <input class="not" type="text" value="" placeholder="  !">
+//     <input class="or" type="text" value="" placeholder="  |">
+//     <input class="var" type="text" value="" placeholder="  $">
+//     // <button type="button" onclick="NewNode(event)">+</button>
+//     <div class="txt" contenteditable="">, Bacon</div>
+// </div>
