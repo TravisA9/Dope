@@ -1,10 +1,11 @@
-    data = {
-        filters:{ Toasted:true, Bacon:true, Tomatos:true, Onions:true, Jalapenos:true, Mustard:true, Relish:true, Catsup:true },
+
+burgerdata = {
+        filters:{ Toasted:true, Bacon:true, Tomatoes:true, Onions:true, Jalapenos:true, Mustard:true, Relish:true, Catsup:true },
         variables:{ Cheese:"Swiss", Greens:"Letuce", Beer:"Corona" }
     };
 
-doc = [
-   { txt:"<h3 style=\"text-align:center;s\">Hello! I'm going to tell you how to make my favorite burger.</h3>"},
+burgerdoc = [
+   { txt:"<h3 style=\"text-align:center;\">Hello! I'm going to tell you how to make my favorite burger.</h3>"},
     { txt:"<table style=\"width:100%\"><tr><th>Hot Items</th><th>Cold Items</th><th>Sauces</th><th>Beer</th></tr><tr><td>Hamburger patty"},
        { and:["Bacon"], txt:", Bacon"},
        { and:["Jalapenos"], txt:", Jalapenos"},
@@ -13,7 +14,7 @@ doc = [
        { txt:" Cheese"},
        { txt:"</td><td>"},
        { var:["Greens"] },
-       { and:["Tomatos"], txt:", Tomatos"},
+       { and:["Tomatoes"], txt:", Tomatoes"},
        { and:["Onions"], txt:", Onions"},
        { not:["Toasted"], txt:", Fresh Buns"},
        { txt:"</td><td>"},
@@ -37,7 +38,7 @@ doc = [
     { txt:"You should place some " },
     { var:["Greens"]},
     { txt:" on your burger. "},
-    { and:["Tomatos"], txt:"<span>Slice tomatos and place them on top. But I would recomend not letting them come into contact with the bun since it can lead to a soggy burger.</span>"},
+    { and:["Tomatoes"], txt:"<span>Slice tomatoes and place them on top. But I would recomend not letting them come into contact with the bun since it can lead to a soggy burger.</span>"},
     { and:["Onions"], txt:" <span>Add thinly sliced onion.</span>"},
     { or:["Mustard", "Relish", "Catsup"], txt:" <span>Now add your sauces like</span>"},
     { and:["Mustard"], txt:" <span> Mustard</span>"},
@@ -48,3 +49,7 @@ doc = [
     { var:["Beer"]},
     { txt:" and a cold mug."}
 ]; // article
+
+// set Burger as default for now.
+data = burgerdata;
+doc = burgerdoc;
