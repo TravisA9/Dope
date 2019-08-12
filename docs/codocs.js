@@ -55,10 +55,12 @@ function Generate(data){
 function Document() {
 document.getElementById("inject").style.display = "block"
 document.getElementById("schema").style.display = "none"
+document.getElementById("data").style.display = "none"
 }
 // =============================================================================
 function Schema(){
     document.getElementById("inject").style.display = "none"
+    document.getElementById("data").style.display = "none"
     document.getElementById("schema").style.display = "block"
 }
 // =============================================================================
@@ -129,7 +131,20 @@ function NewNode(event){
 }
 // =============================================================================
 function Delete(event){
-    event.target.parentElement.remove()
+    if(event.target.parentElement.parentElement.childNodes.length > 2){
+        event.target.parentElement.remove();}
+    else {alert("You need at least one node in your document!")}
+}
+// =============================================================================
+function HtmlText(str){
+    str = str.replace(/</g, '&lt;')
+    str = str.replace(/\},([\{"])/g, '}, $1')
+    return str.replace(/>/g, '&gt;')
+}
+function HtmlTextToStr(str){
+    str = str.replace(/&lt;/g, '<')
+    str = str.replace(/&gt;/g, '>')
+    return str.replace(/"/g, '\"')
 }
 // =============================================================================
 function Commit(event){
@@ -154,18 +169,29 @@ function Commit(event){
         if( or  != null){ n.or = or; }
         if(  v  != null){ n.var = v; }
         if(text != null){
-            text = text.replace(/&lt;/g, '<')
-            text = text.replace(/&gt;/g, '>')
-            text = text.replace(/"/g, '\"')
-            n.txt = text
+            // text = text.replace(/&lt;/g, '<')
+            // text = text.replace(/&gt;/g, '>')
+            // text = text.replace(/"/g, '\"')
+            n.txt = HtmlTextToStr(text)
         }
 
         stack.push(n)
     }
     doc = stack
-    console.log(doc)
+    console.log(JSON.stringify(doc))
 }
 // =============================================================================
+function Data(){
+    var str = "data = <br>" + HtmlText(JSON.stringify(data)) + ";<br><br><br>"
+    str += "doc = <br>" + HtmlText(JSON.stringify(doc)) + ";<br><br><br>"
+    document.getElementById("data").innerHTML = str
+
+
+
+    document.getElementById("inject").style.display = "none"
+    document.getElementById("schema").style.display = "none"
+    document.getElementById("data").style.display = "block"
+}
 // <div class="node" "="">
 //     // <button type="button" onclick="Delete(event)">x</button>
 //     <input class="and" type="text" value="Bacon">
