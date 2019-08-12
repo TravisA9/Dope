@@ -33,14 +33,19 @@
 </form>
 <br>
 
-<button type="button" name="Document" style="background:#2ecc71; padding:8px; margin-left:20px; color:white;font-size:18px;"  onclick="Document()">Document</button>
-<button type="button" name="Schema" style="background:#2980b9; padding:8px; color:white; font-size:18px;"  onclick="Schema()">Schema</button>
+<button class="button" style="background:#2ecc71;"  onclick="Document()">Document</button>
+<button class="button" style="background:#2980b9;"  onclick="Schema()">Schema</button>
+<button class="button" style="background:#f1c40f;" onclick="Data()">Data</button>
 
 <button class="button" style="background:#641e16; float:right;" onclick="Commit(event)">Commit</button>
-
-
+<div id="data" style="border:thick solid #f1c40f; padding:20px 75px 20px 75px; font-size:20px; display:none; margin-top:0px;">Document to be generated will appear here.</div>
 <div id="inject" style="border:thick solid #2ecc71; padding:20px 75px 20px 75px; font-size:20px; margin-top:0px;">Document to be generated will appear here.</div>
-<div id="schema" style="border:thick solid #2980b9; padding:20px 75px 20px 75px; font-size:20px; display:none; margin-top:0px; background:#abb2b9;">Schema will appear here.</div>
+<div id="schema" style="border:thick solid #2980b9; padding:20px 75px 20px 75px; font-size:20px; display:none; margin-top:0px; background:#abb2b9;">
+    <div class="node" "=""><button type="button" onclick="Delete(event)">x</button><input class="and" type="text" value="" placeholder="  &amp;"><input class="not" type="text" value="" placeholder="  !"><input class="or" type="text" value="" placeholder="  |"><input class="var" type="text" value="" placeholder="  $"><button type="button" onclick="NewNode(event)">+</button><div class="txt" contenteditable="">You can modify this node and insert new ones as you like. Apply logical
+    filters (&amp;, !, |, $) to them to design your document's perspectives. To
+     understand how this works you can take a look at one of the examples.
+            </div> </div>
+</div>
 <br><br>
 
 <div style="display:inline-block; padding:5px; background:#212f3d; color:white; font-size:18px;">
